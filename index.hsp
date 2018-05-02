@@ -1,0 +1,24 @@
+#include "hspext.as"
+
+COM_NUM = 5
+
+comopen COM_NUM, "baud=9600 parity=N data=8 stop=1"
+if (stat == 1) {
+	// failed to connect to arduino
+	end
+}
+
+*control
+	comget d, 1
+	if (d == "") {
+		goto *control
+	}
+	cnvstow dcode, str(d)
+	if (dcode == 10) {
+		return
+	}
+	title str(dcode)
+	await 100
+	goto *control
+	
+stop
