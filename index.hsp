@@ -1,24 +1,47 @@
 #include "hspext.as"
+#uselib "user32.dll"
 
-COM_NUM = 5
+#func keybd_event "keybd_event" int,int,int
 
-comopen COM_NUM, "baud=9600 parity=N data=8 stop=1"
-if (stat == 1) {
-	// failed to connect to arduino
-	end
+left_value = 678
+right_value = 1023
+
+repeat
+getkey key
+if (key == 128) {
+	keybd_event 70
+	keybd_event 70,,2
+} 
+if (key == 32) {
+	keybd_event 74
+	keybd_event 74,,2
 }
 
-*control
-	comget d, 1
-	if (d == "") {
-		goto *control
-	}
-	cnvstow dcode, str(d)
-	if (dcode == 10) {
-		return
-	}
-	title str(dcode)
-	await 100
-	goto *control
-	
-stop
+
+aplsel "-("
+window_title = refstr
+string = strmid(window_title, 2, strlen(window_title) - 3)
+split string, ",", left, right
+left = int(left)
+right = int(right)
+
+if (left < 670) {
+	//if (left_value > 670) {
+		// ¶‘€ì
+	keybd_event 75
+	keybd_event 75, , 2
+	//}
+}
+if (right < 1020 ) {
+	//if (right_value > 1020) {
+		keybd_event 68
+		keybd_event 68,,2
+		
+	//}
+	// ‰E‘€ì
+}
+left_value = left
+right_value = right
+
+await 1
+loop
